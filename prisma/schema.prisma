@@ -21,6 +21,7 @@ model Car {
 model Owner {
   id   Int    @id @default(autoincrement())
   name String
+  age  Int
   cars Car[]
 }
 
