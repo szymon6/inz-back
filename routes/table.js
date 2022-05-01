@@ -7,6 +7,7 @@ const prisma = new PrismaClient()
 //validate :table param
 router.param('table', (req, res, next) => {
   const { table } = req.params
+  console.log(table)
   if (!prisma[table]) return res.status(404).send()
   next()
 })

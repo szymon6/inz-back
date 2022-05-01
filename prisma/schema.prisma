@@ -23,3 +23,18 @@ model Owner {
   name String
   cars Car[]
 }
+
+model TableInfo {
+  id          Int          @id @default(autoincrement())
+  name        String
+  displayName String
+  columns     ColumnInfo[]
+}
+
+model ColumnInfo {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  displayName String
+  table       TableInfo @relation(fields: [tableId], references: [id])
+  tableId     Int
+}
