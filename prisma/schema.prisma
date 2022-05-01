@@ -29,13 +29,18 @@ model TableInfo {
   id          Int          @id @default(autoincrement())
   name        String
   displayName String
-  columns     ColumnInfo[]
+  columns     ColumnInfo[] @relation("table")
+  references  ColumnInfo[] @relation("referenceTo")
 }
 
 model ColumnInfo {
-  id          Int       @id @default(autoincrement())
-  name        String    @unique
-  displayName String
-  table       TableInfo @relation(fields: [tableId], references: [id])
-  tableId     Int
+  id            Int        @id @default(autoincrement())
+  name          String     @unique
+  displayName   String
+  type          String?
+  table         TableInfo  @relation("table", fields: [tableId], references: [id])
+  tableId       Int
+  displayValue  Boolean    @default(false)
+  referenceTo   TableInfo? @relation("referenceTo", fields: [referenceToId], references: [id])
+  referenceToId Int?
 }

@@ -11,17 +11,49 @@ router.param('table', (req, res, next) => {
   next()
 })
 
-//get table info
+//get table and columns info
 router.get('/:table', async (req, res) => {
   const { table } = req.params
-  const record = await prisma.tableInfo.findFirst({
-    where: { name: table },
-    include: {
-      columns: true,
-    },
-  })
+  try {
+    const record = await prisma.tableInfo.findFirst({
+      where: { name: table },
+      include: {
+        columns: {
+          orderBy: { id: 'asc' },
+        },
+      },
+    })
+    res.send(record)
+  } catch (e) {
+    res.status(400).send()
+  }
+})
 
-  res.send(record)
+//get options for reference column
+router.get('/options/:tableId', async (req, res) => {
+  try {
+    const tableId = Number(req.params.tableId)
+    const columnInfo = await prisma.columnInfo.findFirst({
+      where: { tableId, displayValue: true },
+      include: { table: true },
+    })
+    const table = columnInfo.table.name
+
+    let options = await prisma[table].findMany({
+      select: { id: true, [columnInfo.name]: true },
+    })
+
+    options = options.map((o) => {
+      return {
+        value: o.id,
+        label: o.name,
+      }
+    })
+
+    res.send(options)
+  } catch (e) {
+    res.status(400).send()
+  }
 })
 
 module.exports = router
