@@ -23,7 +23,9 @@ router.param('id', (req, res, next) => {
 //get all
 router.get('/:table', async (req, res) => {
   const { table } = req.params
-  const allRecords = await prisma[table].findMany()
+  const allRecords = await prisma[table].findMany({
+    orderBy: { id: 'asc' },
+  })
   res.send(allRecords)
 })
 

@@ -41,6 +41,7 @@ router.get('/options/:tableId', async (req, res) => {
 
     let options = await prisma[table].findMany({
       select: { id: true, [columnInfo.name]: true },
+      orderBy: { id: 'asc' },
     })
 
     options = options.map((o) => {
