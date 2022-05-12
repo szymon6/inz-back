@@ -15,7 +15,7 @@ router.param('table', (req, res, next) => {
 router.get('/:table', async (req, res) => {
   const { table } = req.params
   try {
-    const record = await prisma.tableInfo.findFirst({
+    const record = await prisma.table_info.findFirst({
       where: { name: table },
       include: {
         columns: {
@@ -33,7 +33,7 @@ router.get('/:table', async (req, res) => {
 router.get('/options/:tableId', async (req, res) => {
   try {
     const tableId = Number(req.params.tableId)
-    const columnInfo = await prisma.columnInfo.findFirst({
+    const columnInfo = await prisma.column_info.findFirst({
       where: { tableId, displayValue: true },
       include: { table: true },
     })
@@ -43,11 +43,10 @@ router.get('/options/:tableId', async (req, res) => {
       select: { id: true, [columnInfo.name]: true },
       orderBy: { id: 'asc' },
     })
-
     options = options.map((o) => {
       return {
         value: o.id,
-        label: o.name,
+        label: o[columnInfo.name],
       }
     })
 

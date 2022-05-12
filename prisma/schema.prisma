@@ -25,22 +25,22 @@ model Owner {
   cars Car[]
 }
 
-model TableInfo {
-  id          Int          @id @default(autoincrement())
+model table_info {
+  id          Int           @id @default(autoincrement())
   name        String
   displayName String
-  columns     ColumnInfo[] @relation("table")
-  references  ColumnInfo[] @relation("referenceTo")
+  columns     column_info[] @relation("table")
+  references  column_info[] @relation("referenceTo")
 }
 
-model ColumnInfo {
-  id            Int        @id @default(autoincrement())
-  name          String     @unique
+model column_info {
+  id            Int         @id @default(autoincrement())
+  name          String      @unique
   displayName   String
   type          String?
-  table         TableInfo  @relation("table", fields: [tableId], references: [id])
+  table         table_info  @relation("table", fields: [tableId], references: [id])
   tableId       Int
-  displayValue  Boolean    @default(false)
-  referenceTo   TableInfo? @relation("referenceTo", fields: [referenceToId], references: [id])
+  displayValue  Boolean     @default(false)
+  referenceTo   table_info? @relation("referenceTo", fields: [referenceToId], references: [id])
   referenceToId Int?
 }
