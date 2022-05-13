@@ -34,21 +34,24 @@ model table_info {
 }
 
 model column_info {
-  id            Int         @id @default(autoincrement())
-  name          String      @unique
-  displayName   String
-  type          String?
-  table         table_info  @relation("table", fields: [tableId], references: [id]) //tu też nazwa
-  tableId       Int
-  displayValue  Boolean     @default(false)
-  referenceTo   table_info? @relation("referenceTo", fields: [referenceToId], references: [id]) //--||--
-  referenceToId Int?
+  id                    Int         @id @default(autoincrement())
+  name                  String      @unique
+  displayName           String
+  type                  String?
+  table                 table_info  @relation("table", fields: [tableId], references: [id]) //tu też nazwa
+  tableId               Int
+  displayValue          Boolean     @default(false)
+  referenceTo           table_info? @relation("referenceTo", fields: [referenceToId], references: [id]) //--||--
+  referenceToId         Int?
+  referenceToDropdown   dropdown?   @relation(fields: [referenceToDropdownId], references: [id])
+  referenceToDropdownId Int?
 }
 
 model dropdown {
-  id     Int              @id @default(autoincrement())
-  name   String           @unique
-  values dropdown_value[]
+  id         Int              @id @default(autoincrement())
+  name       String           @unique
+  values     dropdown_value[]
+  references column_info[]
 }
 
 model dropdown_value {

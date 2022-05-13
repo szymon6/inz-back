@@ -1,24 +1,13 @@
 const express = require('express')
 const { PrismaClient } = require('@prisma/client')
+const { validateTable, validateId } = require('../middleware/validation')
 
 const router = express.Router()
 const prisma = new PrismaClient()
 
-//validate :table param
-router.param('table', (req, res, next) => {
-  const { table } = req.params
-  if (!prisma[table]) return res.status(404).send()
-  next()
-})
-
-//validate :id param
-router.param('id', (req, res, next) => {
-  const { id } = req.params
-  const num = Number(id)
-  if (!Number.isInteger(num)) return res.status(400).send()
-  req.params.id = num
-  next()
-})
+//param validation
+router.param('table', validateTable)
+router.param('id', validateId)
 
 //get all
 router.get('/:table', async (req, res) => {

@@ -1,38 +1,38 @@
 const express = require('express')
 const { PrismaClient } = require('@prisma/client')
+const { validateId } = require('../middleware/validation')
 
 const router = express.Router()
 const prisma = new PrismaClient()
 
-//validate :table param
-router.param('table', (req, res, next) => {
-  const { table } = req.params
-  if (!prisma[table]) return res.status(404).send()
-  next()
-})
+//param validation
+router.param('id', validateId)
 
-//get table and columns info
-router.get('/:table', async (req, res) => {
-  const { table } = req.params
+//get options for reference column
+router.get('/dropdown/:id', async (req, res) => {
   try {
-    const record = await prisma.table_info.findFirst({
-      where: { name: table },
-      include: {
-        columns: {
-          orderBy: { id: 'asc' },
-        },
-      },
+    const dropdownId = req.params.id
+
+    let options = await prisma.dropdown_value.findMany({
+      where: { dropdownId: dropdownId },
     })
-    res.send(record)
+
+    //rename
+    options = options.map((o) => ({
+      value: o.id,
+      label: o.value,
+    }))
+
+    res.send(options)
   } catch (e) {
     res.status(400).send()
   }
 })
 
 //get options for reference column
-router.get('/options/:tableId', async (req, res) => {
+router.get('/table/:id', async (req, res) => {
   try {
-    const tableId = Number(req.params.tableId)
+    const tableId = req.params.id
     const columnInfo = await prisma.column_info.findFirst({
       where: { tableId, displayValue: true },
       include: { table: true },
