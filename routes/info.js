@@ -43,12 +43,12 @@ router.get('/options/:tableId', async (req, res) => {
       select: { id: true, [columnInfo.name]: true },
       orderBy: { id: 'asc' },
     })
-    options = options.map((o) => {
-      return {
-        value: o.id,
-        label: o[columnInfo.name],
-      }
-    })
+
+    //rename
+    options = options.map((o) => ({
+      value: o.id,
+      label: o[columnInfo.name],
+    }))
 
     res.send(options)
   } catch (e) {

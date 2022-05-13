@@ -29,8 +29,8 @@ model table_info {
   id          Int           @id @default(autoincrement())
   name        String
   displayName String
-  columns     column_info[] @relation("table")
-  references  column_info[] @relation("referenceTo")
+  columns     column_info[] @relation("table") //nazwa dlatego że są 2 takie same relacje
+  references  column_info[] @relation("referenceTo") // --||--
 }
 
 model column_info {
@@ -38,9 +38,22 @@ model column_info {
   name          String      @unique
   displayName   String
   type          String?
-  table         table_info  @relation("table", fields: [tableId], references: [id])
+  table         table_info  @relation("table", fields: [tableId], references: [id]) //tu też nazwa
   tableId       Int
   displayValue  Boolean     @default(false)
-  referenceTo   table_info? @relation("referenceTo", fields: [referenceToId], references: [id])
+  referenceTo   table_info? @relation("referenceTo", fields: [referenceToId], references: [id]) //--||--
   referenceToId Int?
+}
+
+model dropdown {
+  id     Int              @id @default(autoincrement())
+  name   String           @unique
+  values dropdown_value[]
+}
+
+model dropdown_value {
+  id         Int      @id @default(autoincrement())
+  value      String
+  dropdown   dropdown @relation(fields: [dropdownId], references: [id])
+  dropdownId Int
 }
