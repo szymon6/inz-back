@@ -13,9 +13,11 @@ router.get('/dropdown/:id', async (req, res) => {
   try {
     const dropdownId = req.params.id
 
-    let options = await prisma.dropdown_value.findMany({
-      where: { dropdownId: dropdownId },
+    const dropdownName = await prisma.dropdown_info.findUnique({
+      where: { id: dropdownId },
     })
+
+    let options = await prisma[dropdownName.name].findMany()
 
     //rename
     options = options.map((o) => ({

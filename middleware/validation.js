@@ -3,7 +3,6 @@ const prisma = new PrismaClient()
 
 //validate :table param
 const validateTable = (req, res, next) => {
-  console.log('table validation')
   const { table } = req.params
   if (!prisma[table]) return res.status(404).send()
   next()

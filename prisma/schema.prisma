@@ -11,10 +11,12 @@ datasource db {
 }
 
 model Car {
-  id      Int    @id @default(autoincrement())
-  brand   String
-  color   String
-  owner   Owner  @relation(fields: [ownerId], references: [id])
+  id      Int     @id @default(autoincrement())
+  brand   d_brand @relation(fields: [brandId], references: [id])
+  brandId Int
+  color   d_color @relation(fields: [colorId], references: [id])
+  colorId Int
+  owner   Owner   @relation(fields: [ownerId], references: [id])
   ownerId Int
 }
 
@@ -34,29 +36,33 @@ model table_info {
 }
 
 model column_info {
-  id                    Int         @id @default(autoincrement())
-  name                  String      @unique
+  id                    Int            @id @default(autoincrement())
+  name                  String         @unique
   displayName           String
   type                  String?
-  table                 table_info  @relation("table", fields: [tableId], references: [id]) //tu też nazwa
+  table                 table_info     @relation("table", fields: [tableId], references: [id]) //tu też nazwa
   tableId               Int
-  displayValue          Boolean     @default(false)
-  referenceTo           table_info? @relation("referenceTo", fields: [referenceToId], references: [id]) //--||--
+  displayValue          Boolean        @default(false)
+  referenceTo           table_info?    @relation("referenceTo", fields: [referenceToId], references: [id]) //--||--
   referenceToId         Int?
-  referenceToDropdown   dropdown?   @relation(fields: [referenceToDropdownId], references: [id])
+  referenceToDropdown   dropdown_info? @relation(fields: [referenceToDropdownId], references: [id])
   referenceToDropdownId Int?
 }
 
-model dropdown {
-  id         Int              @id @default(autoincrement())
-  name       String           @unique
-  values     dropdown_value[]
+model dropdown_info {
+  id         Int           @id @default(autoincrement())
+  name       String        @unique
   references column_info[]
 }
 
-model dropdown_value {
-  id         Int      @id @default(autoincrement())
-  value      String
-  dropdown   dropdown @relation(fields: [dropdownId], references: [id])
-  dropdownId Int
+model d_brand {
+  id    Int    @id @default(autoincrement())
+  value String
+  cars  Car[]
+}
+
+model d_color {
+  id    Int    @id @default(autoincrement())
+  value String
+  cars  Car[]
 }
