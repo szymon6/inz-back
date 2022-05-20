@@ -11,12 +11,12 @@ datasource db {
 }
 
 model Car {
-  id      Int     @id @default(autoincrement())
-  brand   d_brand @relation(fields: [brandId], references: [id])
+  id      Int      @id @default(autoincrement())
+  brand   d_brand  @relation(fields: [brandId], references: [id])
   brandId Int
-  color   d_color @relation(fields: [colorId], references: [id])
-  colorId Int
-  owner   Owner   @relation(fields: [ownerId], references: [id])
+  color   d_color? @relation(fields: [colorId], references: [id])
+  colorId Int?
+  owner   Owner    @relation(fields: [ownerId], references: [id])
   ownerId Int
 }
 
@@ -43,6 +43,7 @@ model column_info {
   table                 table_info     @relation("table", fields: [tableId], references: [id]) //tu też nazwa
   tableId               Int
   displayValue          Boolean        @default(false)
+  required              Boolean        @default(true)
   referenceTo           table_info?    @relation("referenceTo", fields: [referenceToId], references: [id]) //--||--
   referenceToId         Int?
   referenceToDropdown   dropdown_info? @relation(fields: [referenceToDropdownId], references: [id])
