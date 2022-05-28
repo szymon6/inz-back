@@ -11,20 +11,22 @@ datasource db {
 }
 
 model Car {
-  id      Int      @id @default(autoincrement())
-  brand   d_brand  @relation(fields: [brandId], references: [id])
-  brandId Int
-  color   d_color? @relation(fields: [colorId], references: [id])
-  colorId Int?
-  owner   Owner    @relation(fields: [ownerId], references: [id])
-  ownerId Int
+  id         Int      @id @default(autoincrement())
+  brand      d_brand  @relation(fields: [brandId], references: [id])
+  brandId    Int
+  color      d_color? @relation(fields: [colorId], references: [id])
+  colorId    Int?
+  horsePower Int
+  owner      Owner    @relation(fields: [ownerId], references: [id])
+  ownerId    Int
 }
 
 model Owner {
-  id   Int    @id @default(autoincrement())
-  name String
-  age  Int
-  cars Car[]
+  id        Int      @id @default(autoincrement())
+  name      String
+  birthDate DateTime @db.Date
+  cars      Car[]
+  bald      Boolean
 }
 
 model table_info {

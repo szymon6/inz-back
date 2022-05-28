@@ -12,15 +12,23 @@ router.param('table', validateTable)
 router.get('/:table', async (req, res) => {
   const { table } = req.params
   try {
-    const record = await prisma.table_info.findFirst({
+    const columnInfo = await prisma.table_info.findFirst({
       where: { name: table },
       include: {
         columns: {
           orderBy: { id: 'asc' },
+          include: {
+            referenceTo: {
+              select: { name: true },
+            },
+          },
         },
       },
     })
-    res.send(record)
+
+    console.log(columnInfo)
+
+    res.send(columnInfo)
   } catch (e) {
     res.status(400).send()
   }
