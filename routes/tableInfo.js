@@ -12,7 +12,7 @@ router.param('table', validateTable)
 router.get('/:table', async (req, res) => {
   const { table } = req.params
   try {
-    const columnInfo = await prisma.table_info.findFirst({
+    const tableInfo = await prisma.table_info.findFirst({
       where: { name: table },
       include: {
         columns: {
@@ -25,10 +25,15 @@ router.get('/:table', async (req, res) => {
         },
       },
     })
+    tableInfo.columns.unshift({
+      name: 'id',
+      displayName: 'ID',
+      type: 'number',
+      readonly: true,
+    })
+    console.log(tableInfo)
 
-    console.log(columnInfo)
-
-    res.send(columnInfo)
+    res.send(tableInfo)
   } catch (e) {
     res.status(400).send()
   }
