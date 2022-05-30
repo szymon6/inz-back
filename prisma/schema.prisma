@@ -10,31 +10,52 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Car {
-  id         Int      @id @default(autoincrement())
-  brand      d_brand  @relation(fields: [brandId], references: [id])
-  brandId    Int
-  color      d_color? @relation(fields: [colorId], references: [id])
-  colorId    Int?
-  horsePower Int
-  owner      Owner    @relation(fields: [ownerId], references: [id])
-  ownerId    Int
+model Employee {
+  id           Int          @id @default(autoincrement())
+  name         String
+  email        String
+  role         d_role       @relation(fields: [roleId], references: [id])
+  roleId       Int
+  empType      d_emp_type   @relation(fields: [empTypeId], references: [id])
+  empTypeId    Int
+  country      d_country    @relation(fields: [countryId], references: [id])
+  countryId    Int
+  region       d_region     @relation(fields: [regionId], references: [id])
+  regionId     Int
+  supervisor   d_supervisor @relation(fields: [supervisorId], references: [id])
+  supervisorId Int
+  nowCreate    Boolean
+  cma          DateTime     @db.Date
+  cta          DateTime     @db.Date
+  oldSysAdmin  DateTime     @db.Date
+
 }
 
-model Owner {
-  id        Int      @id @default(autoincrement())
-  name      String
-  birthDate DateTime @db.Date
-  cars      Car[]
-  bald      Boolean
-}
+// model Car {
+//   id         Int      @id @default(autoincrement())
+//   brand      d_brand  @relation(fields: [brandId], references: [id])
+//   brandId    Int
+//   color      d_color? @relation(fields: [colorId], references: [id])
+//   colorId    Int?
+//   horsePower Int
+//   owner      Owner    @relation(fields: [ownerId], references: [id])
+//   ownerId    Int
+// }
+
+// model Owner {
+//   id        Int      @id @default(autoincrement())
+//   name      String
+//   birthDate DateTime @db.Date
+//   cars      Car[]
+//   bald      Boolean
+// }
 
 model table_info {
   id          Int           @id @default(autoincrement())
   name        String
   displayName String
-  columns     column_info[] @relation("table") //nazwa dlatego że są 2 takie same relacje
-  references  column_info[] @relation("referenceTo") // --||--
+  columns     column_info[] @relation("table")
+  references  column_info[] @relation("referenceTo")
 }
 
 model column_info {
@@ -42,11 +63,11 @@ model column_info {
   name                  String         @unique
   displayName           String
   type                  String?
-  table                 table_info     @relation("table", fields: [tableId], references: [id]) //tu też nazwa
+  table                 table_info     @relation("table", fields: [tableId], references: [id])
   tableId               Int
   displayValue          Boolean        @default(false)
   required              Boolean        @default(true)
-  referenceTo           table_info?    @relation("referenceTo", fields: [referenceToId], references: [id]) //--||--
+  referenceTo           table_info?    @relation("referenceTo", fields: [referenceToId], references: [id])
   referenceToId         Int?
   referenceToDropdown   dropdown_info? @relation(fields: [referenceToDropdownId], references: [id])
   referenceToDropdownId Int?
@@ -58,14 +79,44 @@ model dropdown_info {
   references column_info[]
 }
 
-model d_brand {
-  id    Int    @id @default(autoincrement())
-  value String
-  cars  Car[]
+model d_role {
+  id        Int        @id @default(autoincrement())
+  value     String
+  employees Employee[]
 }
 
-model d_color {
-  id    Int    @id @default(autoincrement())
-  value String
-  cars  Car[]
+model d_emp_type {
+  id        Int        @id @default(autoincrement())
+  value     String
+  employees Employee[]
 }
+
+model d_country {
+  id        Int        @id @default(autoincrement())
+  value     String
+  employees Employee[]
+}
+
+model d_region {
+  id        Int        @id @default(autoincrement())
+  value     String
+  employees Employee[]
+}
+
+model d_supervisor {
+  id        Int        @id @default(autoincrement())
+  value     String
+  employees Employee[]
+}
+
+// model d_brand {
+//   id    Int    @id @default(autoincrement())
+//   value String
+//   cars  Car[]
+// }
+
+// model d_color {
+//   id    Int    @id @default(autoincrement())
+//   value String
+//   cars  Car[]
+// }
