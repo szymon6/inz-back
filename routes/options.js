@@ -12,11 +12,12 @@ router.param('id', validateId)
 router.get('/dropdown/:id', async (req, res) => {
   try {
     const dropdownId = req.params.id
+    console.log(typeof dropdownId)
 
     const dropdownName = await prisma.dropdown_info.findUnique({
       where: { id: dropdownId },
     })
-
+    console.log(dropdownName)
     let options = await prisma[dropdownName.name].findMany()
 
     //rename

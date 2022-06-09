@@ -10,6 +10,7 @@ router.param('table', validateTable)
 
 //get table and columns info
 router.get('/:table', async (req, res) => {
+  console.log('hehe')
   const { table } = req.params
   try {
     const tableInfo = await prisma.table_info.findFirst({

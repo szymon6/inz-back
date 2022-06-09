@@ -11,44 +11,26 @@ datasource db {
 }
 
 model Employee {
-  id           Int          @id @default(autoincrement())
+  id           Int                   @id @default(autoincrement())
   name         String
   email        String
-  role         d_role       @relation(fields: [roleId], references: [id])
+  role         d_role                @relation(fields: [roleId], references: [id])
   roleId       Int
-  empType      d_emp_type   @relation(fields: [empTypeId], references: [id])
+  empType      d_emp_type            @relation(fields: [empTypeId], references: [id])
   empTypeId    Int
-  country      d_country    @relation(fields: [countryId], references: [id])
+  country      d_country             @relation(fields: [countryId], references: [id])
   countryId    Int
-  region       d_region     @relation(fields: [regionId], references: [id])
+  region       d_region              @relation(fields: [regionId], references: [id])
   regionId     Int
-  supervisor   d_supervisor @relation(fields: [supervisorId], references: [id])
+  supervisor   d_supervisor          @relation(fields: [supervisorId], references: [id])
   supervisorId Int
   nowCreate    Boolean
-  cma          DateTime     @db.Date
-  cta          DateTime     @db.Date
-  oldSysAdmin  DateTime     @db.Date
-
+  cma          DateTime              @db.Date
+  cta          DateTime              @db.Date
+  oldSysAdmin  DateTime              @db.Date
+  snowCerts    Employee_snow_cert[]
+  otherCerts   Employee_other_cert[]
 }
-
-// model Car {
-//   id         Int      @id @default(autoincrement())
-//   brand      d_brand  @relation(fields: [brandId], references: [id])
-//   brandId    Int
-//   color      d_color? @relation(fields: [colorId], references: [id])
-//   colorId    Int?
-//   horsePower Int
-//   owner      Owner    @relation(fields: [ownerId], references: [id])
-//   ownerId    Int
-// }
-
-// model Owner {
-//   id        Int      @id @default(autoincrement())
-//   name      String
-//   birthDate DateTime @db.Date
-//   cars      Car[]
-//   bald      Boolean
-// }
 
 model table_info {
   id          Int           @id @default(autoincrement())
@@ -60,7 +42,7 @@ model table_info {
 
 model column_info {
   id                    Int            @id @default(autoincrement())
-  name                  String         @unique
+  name                  String
   displayName           String
   type                  String?
   table                 table_info     @relation("table", fields: [tableId], references: [id])
@@ -71,6 +53,41 @@ model column_info {
   referenceToId         Int?
   referenceToDropdown   dropdown_info? @relation(fields: [referenceToDropdownId], references: [id])
   referenceToDropdownId Int?
+}
+
+model Snow_cert {
+  id     Int                  @id @default(autoincrement())
+  name   String               @unique
+  type   d_snow_cert_type     @relation(fields: [typeId], references: [id])
+  typeId Int
+  certs  Employee_snow_cert[]
+}
+
+model Other_cert {
+  id    Int                   @id @default(autoincrement())
+  name  String                @unique
+  certs Employee_other_cert[]
+}
+
+model Employee_snow_cert {
+  id              Int       @id @default(autoincrement())
+  employee        Employee  @relation(fields: [employeeId], references: [id])
+  employeeId      Int
+  cert            Snow_cert @relation(fields: [certId], references: [id])
+  certId          Int
+  courseDate      DateTime? @db.Date
+  certDate        DateTime  @db.Date
+  recentDeltaDate DateTime? @db.Date
+}
+
+model Employee_other_cert {
+  id         Int        @id @default(autoincrement())
+  employee   Employee   @relation(fields: [employeeId], references: [id])
+  employeeId Int
+  cert       Other_cert @relation(fields: [certId], references: [id])
+  certId     Int
+  certDate   DateTime   @db.Date
+
 }
 
 model dropdown_info {
@@ -109,14 +126,8 @@ model d_supervisor {
   employees Employee[]
 }
 
-// model d_brand {
-//   id    Int    @id @default(autoincrement())
-//   value String
-//   cars  Car[]
-// }
-
-// model d_color {
-//   id    Int    @id @default(autoincrement())
-//   value String
-//   cars  Car[]
-// }
+model d_snow_cert_type {
+  id        Int         @id @default(autoincrement())
+  value     String
+  employees Snow_cert[]
+}

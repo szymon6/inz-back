@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Owner" ALTER COLUMN "birthDate" SET DATA TYPE DATE;
