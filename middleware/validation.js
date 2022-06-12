@@ -1,7 +1,7 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
-//validate :table param
+//validate :table param (check if table exist)
 const validateTable = (req, res, next) => {
   const { table } = req.params
   if (!prisma[table]) return res.status(404).send()
