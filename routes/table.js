@@ -1,13 +1,18 @@
 const express = require('express')
 const { PrismaClient } = require('@prisma/client')
-const { validateTable, validateId } = require('../middleware/validation')
+const { validateTable, validateId, validateToken } = require('../middleware/validation')
+const { RuleTester } = require('eslint')
 
 const router = express.Router()
 const prisma = new PrismaClient()
 
+//protect all routes with jwt
+router.use(validateToken)
+
 //param validation
-router.param('table', validateTable)
-router.param('id', validateId)
+router.param('table', validateTable) //like router.use but only fires when request has a 'table' param
+router.param('id', validateId) //like router.use but only fires when request has a 'table' param
+
 
 //get all
 router.get('/:table', async (req, res) => {
@@ -49,7 +54,7 @@ router.delete(`/:table/:id`, async (req, res) => {
   }
 })
 
-//edit
+//edit //TODO change to patch
 router.put('/:table/:id', async (req, res) => {
   const { id, table } = req.params
 

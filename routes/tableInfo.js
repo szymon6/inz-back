@@ -1,9 +1,12 @@
 const express = require('express')
 const { PrismaClient } = require('@prisma/client')
-const { validateTable } = require('../middleware/validation')
+const { validateTable, validateToken } = require('../middleware/validation')
 
 const router = express.Router()
 const prisma = new PrismaClient()
+
+//protect all routes with jwt
+router.use(validateToken)
 
 //param validation
 router.param('table', validateTable)

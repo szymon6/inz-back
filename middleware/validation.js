@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
+var jwt = require('jsonwebtoken')
 
 //validate :table param (check if table exist)
 const validateTable = (req, res, next) => {
@@ -17,4 +18,23 @@ const validateId = (req, res, next) => {
   next()
 }
 
-module.exports = { validateTable, validateId }
+
+const validateToken = async (req, res, next) => {
+  const token = req.headers.token
+  console.log(token);
+ 
+  await jwt.verify(token, process.env.KEY, async (err, decoded) => {
+    if (err) return res.status(403).send() //not authorised (bad jwt)
+
+    const user = await prisma.user.findUnique({
+      select: { id: true, username: true },
+      where: { id: decoded.userId },
+    })
+    req.body.user = user;
+    next();
+  })
+    
+  
+}
+
+module.exports = { validateTable, validateId, validateToken }

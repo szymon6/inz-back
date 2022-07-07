@@ -1,9 +1,12 @@
 const express = require('express')
 const { PrismaClient } = require('@prisma/client')
-const { validateId } = require('../middleware/validation')
+const { validateId, validateToken } = require('../middleware/validation')
 
 const router = express.Router()
 const prisma = new PrismaClient()
+
+//protect all routes with jwt
+router.use(validateToken)
 
 //param validation
 router.param('id', validateId)
@@ -17,7 +20,6 @@ router.get('/dropdown/:id', async (req, res) => {
     const dropdownName = await prisma.dropdown_info.findUnique({
       where: { id: dropdownId },
     })
-    console.log(dropdownName)
     let options = await prisma[dropdownName.name].findMany()
 
     //rename
