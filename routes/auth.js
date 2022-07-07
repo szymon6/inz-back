@@ -30,24 +30,27 @@ router.post('/login', async (req, res) => {
 
 //get user info based on jtw
 router.get('/user', validateToken, async (req, res) => {
+  const { userId } = req.headers
+
   try {
-    res.send(req.body.user)
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    })
+    res.send(user)
   } catch (e) {
     res.status(400).send(e)
   }
 })
 
 //change pass
-router.post('/changePass', validateToken, async (req, res) => {
+router.post('/change-pass', validateToken, async (req, res) => {
   try {
-    const {oldPass, newPass } = req.body
-    const username =  req.body.user.username;
-    console.log(req.body.user.username);
+    const { oldPass, newPass } = req.body
+    const { userId } = req.headers
 
     const user = await prisma.user.findUnique({
-      where: { username },
+      where: { id: userId },
     })
-
 
     if (!user || !(await bcrypt.compare(oldPass, user.password)))
       return res.status(401).send('bad password') //password
@@ -56,7 +59,7 @@ router.post('/changePass', validateToken, async (req, res) => {
 
     await prisma.user.update({
       where: {
-        username,
+        id: userId,
       },
       data: {
         password: hashedNewPass,

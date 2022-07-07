@@ -18,11 +18,9 @@ const validateId = (req, res, next) => {
   next()
 }
 
-
 const validateToken = async (req, res, next) => {
   const token = req.headers.token
-  console.log(token);
- 
+
   await jwt.verify(token, process.env.KEY, async (err, decoded) => {
     if (err) return res.status(403).send() //not authorised (bad jwt)
 
@@ -30,11 +28,10 @@ const validateToken = async (req, res, next) => {
       select: { id: true, username: true },
       where: { id: decoded.userId },
     })
-    req.body.user = user;
-    next();
+    req.headers.userId = user.id
+    console.log('authorized')
+    next()
   })
-    
-  
 }
 
 module.exports = { validateTable, validateId, validateToken }

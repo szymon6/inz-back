@@ -6,7 +6,7 @@ const prisma = new PrismaClient()
 const users = [
   {
     username: 'user1',
-    password: 'pass1',
+    password: 'p1',
   },
 ]
 

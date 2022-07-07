@@ -1,6 +1,10 @@
 const express = require('express')
 const { PrismaClient } = require('@prisma/client')
-const { validateTable, validateId, validateToken } = require('../middleware/validation')
+const {
+  validateTable,
+  validateId,
+  validateToken,
+} = require('../middleware/validation')
 const { RuleTester } = require('eslint')
 
 const router = express.Router()
@@ -12,7 +16,6 @@ router.use(validateToken)
 //param validation
 router.param('table', validateTable) //like router.use but only fires when request has a 'table' param
 router.param('id', validateId) //like router.use but only fires when request has a 'table' param
-
 
 //get all
 router.get('/:table', async (req, res) => {
@@ -33,7 +36,7 @@ router.get('/:table/:id', async (req, res) => {
 //create new
 router.post('/:table', async (req, res) => {
   const { table } = req.params
-
+  console.log(req.headers)
   try {
     const record = await prisma[table].create({ data: req.body })
     res.send(record)
