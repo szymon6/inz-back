@@ -15,3 +15,5 @@ app.use('/options', require('./routes/options'))
 app.listen(3100, () => {
   console.log(`Server is Listening on 3100`)
 })
+
+console.log(process.env.PORT)

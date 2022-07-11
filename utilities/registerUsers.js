@@ -3,20 +3,18 @@ const bcrypt = require('bcrypt')
 
 const prisma = new PrismaClient()
 
-const users = [
-  {
-    username: 'user1',
-    password: 'p1',
-  },
-]
+const args = process.argv.slice(2)
 
-users.forEach(async (user) => {
-  const hashedPass = await bcrypt.hash(user.password, 10)
+const user = {
+  username: args[0],
+  password: args[1],
+}
 
-  await prisma.user.create({
+bcrypt.hash(user.password, 10).then((hashedPass) =>
+  prisma.user.create({
     data: {
       username: user.username,
       password: hashedPass,
     },
   })
-})
+)
