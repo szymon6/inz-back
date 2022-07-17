@@ -11,7 +11,7 @@ const router = express.Router()
 const prisma = new PrismaClient()
 
 //protect all routes with jwt
-router.use(validateToken)
+//router.use(validateToken)
 
 //param validation
 router.param('table', validateTable) //like router.use but only fires when request has a 'table' param
