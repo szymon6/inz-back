@@ -6,7 +6,7 @@ const router = express.Router()
 const prisma = new PrismaClient()
 
 //protect all routes with jwt
-router.use(validateToken)
+//router.use(validateToken)
 
 //param validation
 router.param('table', validateTable)
@@ -29,6 +29,7 @@ router.get('/:table', async (req, res) => {
       },
     })
     tableInfo.columns.unshift({
+      id: 0,
       name: 'id',
       displayName: 'ID',
       type: 'number',

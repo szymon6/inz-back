@@ -63,7 +63,7 @@ model column_info {
 
 model Snow_cert {
   id     Int                  @id @default(autoincrement())
-  name   String               @unique
+  name   String
   type   d_snow_cert_type     @relation(fields: [typeId], references: [id])
   typeId Int
   certs  Employee_snow_cert[]
@@ -71,7 +71,7 @@ model Snow_cert {
 
 model Other_cert {
   id    Int                   @id @default(autoincrement())
-  name  String                @unique
+  name  String
   certs Employee_other_cert[]
 }
 
@@ -93,7 +93,6 @@ model Employee_other_cert {
   cert       Other_cert @relation(fields: [certId], references: [id])
   certId     Int
   certDate   DateTime   @db.Date
-
 }
 
 model dropdown_info {
