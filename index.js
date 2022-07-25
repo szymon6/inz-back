@@ -10,7 +10,7 @@ app.use(express.json())
 app.use('/auth', require('./routes/auth'))
 app.use('/table', require('./routes/table'))
 app.use('/linked', require('./routes/linkedList'))
-app.use('/table-info', require('./routes/tableInfo'))
+app.use('/', require('./routes/tableInfo'))
 app.use('/options', require('./routes/options'))
 
 app.listen(3100, () => {
