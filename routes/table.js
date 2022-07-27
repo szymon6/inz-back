@@ -36,7 +36,6 @@ router.get('/:table/:id', async (req, res) => {
 //create new
 router.post('/:table', async (req, res) => {
   const { table } = req.params
-  console.log(req.headers)
   try {
     const record = await prisma[table].create({ data: req.body })
     res.send(record)

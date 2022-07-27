@@ -31,9 +31,9 @@ model Employee {
   supervisor   d_supervisor          @relation(fields: [supervisorId], references: [id])
   supervisorId Int
   nowCreate    Boolean
-  cma          DateTime              @db.Date
-  cta          DateTime              @db.Date
-  oldSysAdmin  DateTime              @db.Date
+  cma          DateTime?             @db.Date
+  cta          DateTime?             @db.Date
+  oldSysAdmin  DateTime?             @db.Date
   snowCerts    Employee_snow_cert[]
   otherCerts   Employee_other_cert[]
 }
