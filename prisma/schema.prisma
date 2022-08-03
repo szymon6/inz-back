@@ -103,36 +103,36 @@ model dropdown_info {
 
 model d_role {
   id        Int        @id @default(autoincrement())
-  value     String
+  value     String     @unique
   employees Employee[]
 }
 
 model d_emp_type {
   id        Int        @id @default(autoincrement())
-  value     String
+  value     String     @unique
   employees Employee[]
 }
 
 model d_country {
   id        Int        @id @default(autoincrement())
-  value     String
+  value     String     @unique
   employees Employee[]
 }
 
 model d_region {
   id        Int        @id @default(autoincrement())
-  value     String
+  value     String     @unique
   employees Employee[]
 }
 
 model d_supervisor {
   id        Int        @id @default(autoincrement())
-  value     String
+  value     String     @unique
   employees Employee[]
 }
 
 model d_snow_cert_type {
   id        Int         @id @default(autoincrement())
-  value     String
+  value     String      @unique
   employees Snow_cert[]
 }
