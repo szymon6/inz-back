@@ -1,7 +1,8 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
-async function addToDropdown(dropdownName, value) {
+//if already exist just return id, if not create one and return id
+async function dropdown(dropdownName, value) {
   const result = await prisma.dropdown_info.findUnique({
     where: { name: dropdownName },
   })
@@ -15,4 +16,6 @@ async function addToDropdown(dropdownName, value) {
   return record.id
 }
 
-//addToDropdown('d_role', 'aa2').then(console.log)
+module.exports = dropdown
+
+//dropdown('d_role', 'aa2').then(console.log)
