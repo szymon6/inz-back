@@ -17,6 +17,7 @@ router.get('/form', async (req, res) => {
 
 router.post('/upload', async (req, res) => {
   try {
+    //console.log(req.files.spreadsheet)
     await uploadFile(req.files.spreadsheet)
     res.send()
   } catch (e) {
