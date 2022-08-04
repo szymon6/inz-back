@@ -1,18 +1,38 @@
+const { PrismaClient } = require('@prisma/client')
+const prisma = new PrismaClient()
+
 const { parse } = require('papaparse')
 const dropdown = require('./dropdown')
 
+//todo: clear all dropdowns and Employees before migration
 async function uploadFile(file) {
   const { data: array } = parse(file.data.toString('utf8'))
   array.splice(0, 5)
-  const current = array[0]
+
+  const currentRow = array[0]
+  await createEmployee(currentRow)
+  await certifyEmployeeSnow(currentRow)
+  await certifyEmployeeOther(currentRow)
+}
+
+const createEmployee = async (row) => {
   const data = {
-    name: current[0],
-    email: current[1],
-    roleId: await dropdown('d_role', current[2]),
+    name: row[0],
+    email: row[1],
+    roleId: await dropdown('d_role', row[2]),
+    empTypeId: await dropdown('d_emp_type', row[3]),
+    countryId: await dropdown('d_country', row[4]),
+    regionId: await dropdown('d_region', row[5]),
+    supervisorId: await dropdown('d_supervisor', row[6]),
+    nowCreate: false, //TODO nowCreate, cma, ctra, oldSysAdmin
   }
 
+  await prisma.employee.create({ data })
   console.log(data)
-  //dropdown('d_role', 'aa2').then(console.log)
 }
+
+const certifyEmployeeSnow = async (row) => {}
+
+const certifyEmployeeOther = async (row) => {}
 
 module.exports = uploadFile
