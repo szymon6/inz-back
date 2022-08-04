@@ -29,7 +29,6 @@ const validateToken = async (req, res, next) => {
       where: { id: decoded.userId },
     })
     req.headers.userId = user.id
-    console.log('authorized')
     next()
   })
 }

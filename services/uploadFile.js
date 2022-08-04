@@ -2,12 +2,20 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 const { parse } = require('papaparse')
+const deleteData = require('./deleteData')
 const dropdown = require('./dropdown')
 
-//todo1: clear all data on migration
+const fileToArray = (file) => {
+  const { data } = parse(file.data.toString('utf8'))
+  data.splice(0, 5)
+  return data
+}
+
 async function uploadFile(file) {
-  const { data: array } = parse(file.data.toString('utf8'))
-  array.splice(0, 5)
+  const array = fileToArray(file)
+
+  //clear all the data before upload
+  await deleteData()
 
   const currentRow = array[0] //todo4 - loop
   await createEmployee(currentRow)
@@ -24,11 +32,10 @@ const createEmployee = async (row) => {
     countryId: await dropdown('d_country', row[4]),
     regionId: await dropdown('d_region', row[5]),
     supervisorId: await dropdown('d_supervisor', row[6]),
-    nowCreate: false, //TODO nowCreate, cma, ctra, oldSysAdmin
+    nowCreate: false, //TODO1 nowCreate, cma, ctra, oldSysAdmin
   }
 
   await prisma.employee.create({ data })
-  console.log(data)
 }
 
 const certifyEmployeeSnow = async (row) => {

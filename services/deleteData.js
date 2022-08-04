@@ -1,8 +1,8 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
-deleteData()
 async function deleteData() {
+  console.log('hihi')
   await deleteCertifications()
   await deleteEmployees()
   await deleteDropdowns()
@@ -26,5 +26,7 @@ async function deleteDropdowns() {
     'd_supervisor',
   ]
 
-  dropdowns.forEach(async (d) => await prisma[d].deleteMany())
+  for (const dropdown of dropdowns) await prisma[dropdown].deleteMany()
 }
+
+module.exports = deleteData
