@@ -4,12 +4,12 @@ const prisma = new PrismaClient()
 const { parse } = require('papaparse')
 const dropdown = require('./dropdown')
 
-//todo: clear all dropdowns and Employees before migration
+//todo1: clear all data on migration
 async function uploadFile(file) {
   const { data: array } = parse(file.data.toString('utf8'))
   array.splice(0, 5)
 
-  const currentRow = array[0]
+  const currentRow = array[0] //todo4 - loop
   await createEmployee(currentRow)
   await certifyEmployeeSnow(currentRow)
   await certifyEmployeeOther(currentRow)
@@ -31,8 +31,12 @@ const createEmployee = async (row) => {
   console.log(data)
 }
 
-const certifyEmployeeSnow = async (row) => {}
+const certifyEmployeeSnow = async (row) => {
+  //todo3
+}
 
-const certifyEmployeeOther = async (row) => {}
+const certifyEmployeeOther = async (row) => {
+  //todo2
+}
 
 module.exports = uploadFile
