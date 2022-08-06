@@ -2,7 +2,6 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 async function deleteData() {
-  console.log('hihi')
   await deleteCertifications()
   await deleteEmployees()
   await deleteDropdowns()

@@ -11,6 +11,10 @@ const fileToArray = (file) => {
   return data
 }
 
+const trim = (array) => {
+  for (let i = 0; i < array.length; i++) array[i] = array[i].trim()
+}
+
 async function uploadFile(file) {
   const array = fileToArray(file)
 
@@ -18,9 +22,17 @@ async function uploadFile(file) {
   await deleteData()
 
   const currentRow = array[0] //todo4 - loop
+
+  trim(currentRow)
+
+  //todo try catch and info on frontend with row number
   await createEmployee(currentRow)
   await certifyEmployeeSnow(currentRow)
   await certifyEmployeeOther(currentRow)
+}
+const date = (date) => {
+  if (!date || date == '') return null
+  return new Date(date)
 }
 
 const createEmployee = async (row) => {
@@ -32,7 +44,10 @@ const createEmployee = async (row) => {
     countryId: await dropdown('d_country', row[4]),
     regionId: await dropdown('d_region', row[5]),
     supervisorId: await dropdown('d_supervisor', row[6]),
-    nowCreate: false, //TODO1 nowCreate, cma, ctra, oldSysAdmin
+    nowCreate: ['yea', 'yes'].includes(row[7]),
+    cma: date(row[8]),
+    cta: date(row[9]),
+    oldSysAdmin: date(row[10]),
   }
 
   await prisma.employee.create({ data })
