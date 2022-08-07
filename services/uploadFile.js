@@ -21,11 +21,14 @@ const trim = (array) => {
   for (let i = 0; i < array.length; i++) array[i] = array[i].trim()
 }
 
-const toDate = (date) => {
-  if (!date || date == '') return null
-  else if (config.affirmative.includes(date)) return new Date(0)
+const toDate = (strDate) => {
+  if (!strDate || strDate == '') return null
+  else if (config.affirmative.includes(strDate)) return new Date(0)
 
-  return new Date(date)
+  const date = new Date(strDate)
+  date.setDate(date.getDate() + 1)
+
+  return date
 }
 
 const createEmployee = async (row) => {
@@ -48,7 +51,24 @@ const createEmployee = async (row) => {
 }
 
 const certifyEmployeeSnow = async (row, currentEmployeeId) => {
-  //todo3
+  //TODO now - all certs and loop
+  const cert = {
+    name: 'ITSM Implementation',
+    courseDateRow: 11,
+    certDateRow: 12,
+    recentDeltaDateRow: 13,
+  }
+
+  const data = {
+    employeeId: currentEmployeeId,
+    certId: (await prisma.snow_cert.findUnique({ where: { name: cert.name } }))
+      .id,
+    courseDate: cert.courseDateRow && toDate(row[cert.courseDateRow]),
+    certDate: toDate(row[cert.certDateRow]),
+    recentDeltaDate:
+      cert.recentDeltaDateRow && toDate(row[cert.recentDeltaDateRow]),
+  }
+  console.log(data)
 }
 
 const certifyEmployeeOther = async (row, currentEmployeeId) => {
