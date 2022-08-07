@@ -59,7 +59,6 @@ const certifyEmployeeOther = async (row, currentEmployeeId) => {
     { name: 'Prince2', row: 63 },
     { name: 'other', row: 64 },
   ]
-  //console.log(row)
   for (const cert of certs) {
     const certDate = toDate(row[cert.row])
     if (!certDate) continue

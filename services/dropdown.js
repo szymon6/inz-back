@@ -17,5 +17,3 @@ async function dropdown(dropdownName, value) {
 }
 
 module.exports = dropdown
-
-//dropdown('d_role', 'aa2').then(console.log)
