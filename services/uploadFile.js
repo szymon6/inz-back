@@ -6,10 +6,7 @@ const { parse } = require('papaparse')
 const deleteData = require('./deleteData')
 const dropdown = require('./dropdown')
 
-const config = {
-  startPoz: 5,
-  affirmative: ['yea', 'yes'],
-}
+const config = require('../config/uploadConfig')
 
 const fileToArray = (file) => {
   const { data } = parse(file.data.toString('utf8'))
@@ -23,10 +20,11 @@ const trim = (array) => {
 
 const toDate = (strDate) => {
   if (!strDate || strDate == '') return null
-  else if (config.affirmative.includes(strDate)) return new Date(0)
 
-  const date = new Date(strDate)
-  date.setDate(date.getDate() + 1)
+  let date = new Date(strDate)
+
+  if (!isNaN(date)) date.setDate(date.getDate() + 1)
+  else date = new Date(0)
 
   return date
 }
@@ -51,34 +49,25 @@ const createEmployee = async (row) => {
 }
 
 const certifyEmployeeSnow = async (row, currentEmployeeId) => {
-  //TODO now - all certs and loop
-  const cert = {
-    name: 'ITSM Implementation',
-    courseDateRow: 11,
-    certDateRow: 12,
-    recentDeltaDateRow: 13,
-  }
+  const certs = config.snowCerts
 
-  const data = {
-    employeeId: currentEmployeeId,
-    certId: (await prisma.snow_cert.findUnique({ where: { name: cert.name } }))
-      .id,
-    courseDate: cert.courseDateRow && toDate(row[cert.courseDateRow]),
-    certDate: toDate(row[cert.certDateRow]),
-    recentDeltaDate:
-      cert.recentDeltaDateRow && toDate(row[cert.recentDeltaDateRow]),
+  for (const cert of certs) {
+    const data = {
+      employeeId: currentEmployeeId,
+      certId: (
+        await prisma.snow_cert.findUnique({ where: { name: cert.name } })
+      ).id,
+      courseDate: cert.courseDateRow && toDate(row[cert.courseDateRow]),
+      certDate: toDate(row[cert.certDateRow]),
+      recentDeltaDate:
+        cert.recentDeltaDateRow && toDate(row[cert.recentDeltaDateRow]),
+    }
+    console.log(data)
   }
-  console.log(data)
 }
 
 const certifyEmployeeOther = async (row, currentEmployeeId) => {
-  const certs = [
-    { name: 'Scrum Master', row: 60 },
-    { name: 'ITIL', row: 61 },
-    { name: 'TOGAF', row: 62 },
-    { name: 'Prince2', row: 63 },
-    { name: 'other', row: 64 },
-  ]
+  const certs = config.otherCerts
   for (const cert of certs) {
     const certDate = toDate(row[cert.row])
     if (!certDate) continue
@@ -106,7 +95,7 @@ async function uploadFile(file) {
 
   //todo try catch and info on frontend with row number
   const currentEmployeeId = await createEmployee(currentRow)
-  await certifyEmployeeSnow(currentRow, currentEmployeeId)
+  // await certifyEmployeeSnow(currentRow, currentEmployeeId)
   await certifyEmployeeOther(currentRow, currentEmployeeId)
 }
 
