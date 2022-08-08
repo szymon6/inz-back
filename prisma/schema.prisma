@@ -30,7 +30,7 @@ model Employee {
   regionId     Int
   supervisor   d_supervisor          @relation(fields: [supervisorId], references: [id])
   supervisorId Int
-  nowCreate    Boolean
+  nowCreate    DateTime?             @db.Date
   cma          DateTime?             @db.Date
   cta          DateTime?             @db.Date
   oldSysAdmin  DateTime?             @db.Date

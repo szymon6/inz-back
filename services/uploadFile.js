@@ -38,7 +38,7 @@ const createEmployee = async (row) => {
     countryId: await dropdown('d_country', row[4]),
     regionId: await dropdown('d_region', row[5]),
     supervisorId: await dropdown('d_supervisor', row[6]),
-    nowCreate: ['yea', 'yes'].includes(row[7]),
+    nowCreate: row[7] && row[7] != '',
     cma: toDate(row[8]),
     cta: toDate(row[9]),
     oldSysAdmin: toDate(row[10]),
