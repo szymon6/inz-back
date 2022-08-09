@@ -10,12 +10,10 @@ const router = express.Router()
 const prisma = new PrismaClient()
 
 //protect all routes with jwt
-//router.use(validateToken) //TODO uncoment this
+router.use(validateToken)
 
+//param validation
 router.param('id', validateId)
-
-//TODO: certfi more users
-//get hose retuned ids and query employee table with them
 
 //get employees having a cert
 router.get('/other_cert/:id/employees', async (req, res) => {
