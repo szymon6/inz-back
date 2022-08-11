@@ -21,12 +21,16 @@ const trim = (array) => {
 const toDate = (strDate) => {
   if (!strDate || strDate == '') return null
 
-  let date = new Date(strDate)
+  if (/\d\d-\d\d-\d*/.test(strDate)) {
+    var dmy = strDate.split('-')
 
-  if (!isNaN(date)) date.setDate(date.getDate() + 1)
-  else date = new Date(0)
+    var date = new Date(dmy[2], dmy[1] - 1, dmy[0])
+    date.setDate(date.getDate() + 1)
 
-  return date
+    if (!isNaN(date)) return date
+  }
+
+  return new Date(0)
 }
 
 const createEmployee = async (row) => {
@@ -52,6 +56,9 @@ const certifyEmployeeSnow = async (row, currentEmployeeId) => {
   const certs = config.snowCerts
 
   for (const cert of certs) {
+    const certDate = toDate(row[cert.certDateRow])
+    if (!certDate) continue
+
     const data = {
       employeeId: currentEmployeeId,
       certId: (
@@ -62,13 +69,14 @@ const certifyEmployeeSnow = async (row, currentEmployeeId) => {
       recentDeltaDate:
         cert.recentDeltaDateRow && toDate(row[cert.recentDeltaDateRow]),
     }
-    console.log(data)
+    await prisma.employee_snow_cert.create({ data })
   }
 }
 
 const certifyEmployeeOther = async (row, currentEmployeeId) => {
   const certs = config.otherCerts
   for (const cert of certs) {
+    //cert date is mandatory
     const certDate = toDate(row[cert.row])
     if (!certDate) continue
 
@@ -89,11 +97,10 @@ async function uploadFile(file) {
   //clear all the data before upload
   await deleteData() //todo at the same end - comment this out
 
-  const currentRow = array[0] //todo4 - loop
+  const currentRow = array[101] //todo4 - loop
 
   trim(currentRow)
 
-  //todo try catch and info on frontend with row number
   const currentEmployeeId = await createEmployee(currentRow)
   // await certifyEmployeeSnow(currentRow, currentEmployeeId)
   await certifyEmployeeOther(currentRow, currentEmployeeId)
