@@ -22,11 +22,12 @@ const toDate = (strDate) => {
   if (!strDate || strDate == '') return null
 
   if (/\d\d-\d\d-\d*/.test(strDate)) {
+    //flip days and months due improper date format in the file
     var dmy = strDate.split('-')
+    strDate = `${dmy[2]}-${dmy[1] - 1}-${dmy[0]}`
+    var date = new Date(strDate)
 
-    var date = new Date(dmy[2], dmy[1] - 1, dmy[0])
     date.setDate(date.getDate() + 1)
-
     if (!isNaN(date)) return date
   }
 
@@ -76,7 +77,7 @@ const certifyEmployeeSnow = async (row, currentEmployeeId) => {
 const certifyEmployeeOther = async (row, currentEmployeeId) => {
   const certs = config.otherCerts
   for (const cert of certs) {
-    //cert date is mandatory
+    //check if there is a cert date - it's mandatory
     const certDate = toDate(row[cert.row])
     if (!certDate) continue
 
@@ -92,18 +93,19 @@ const certifyEmployeeOther = async (row, currentEmployeeId) => {
 }
 
 async function uploadFile(file) {
-  const array = fileToArray(file)
+  const rows = fileToArray(file)
 
   //clear all the data before upload
   await deleteData() //todo at the same end - comment this out
 
-  const currentRow = array[101] //todo4 - loop
+  for (const currentRow of rows) {
+    //skip empty rows
+    if (currentRow.every((cell) => cell.trim() == '')) continue
 
-  trim(currentRow)
-
-  const currentEmployeeId = await createEmployee(currentRow)
-  // await certifyEmployeeSnow(currentRow, currentEmployeeId)
-  await certifyEmployeeOther(currentRow, currentEmployeeId)
+    const currentEmployeeId = await createEmployee(currentRow)
+    await certifyEmployeeSnow(currentRow, currentEmployeeId)
+    await certifyEmployeeOther(currentRow, currentEmployeeId)
+  }
 }
 
 module.exports = uploadFile
