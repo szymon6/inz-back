@@ -56,6 +56,7 @@ router.delete(`/:table/:id`, async (req, res) => {
   }
 })
 
+//update
 router.patch('/:table/:id', async (req, res) => {
   const { id, table } = req.params
 
