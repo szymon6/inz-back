@@ -1,5 +1,4 @@
 const { PrismaClient } = require('@prisma/client')
-const e = require('cors')
 const prisma = new PrismaClient()
 
 const { parse } = require('papaparse')
@@ -12,10 +11,6 @@ const fileToArray = (file) => {
   const { data } = parse(file.data.toString('utf8'))
   data.splice(0, config.startPoz)
   return data
-}
-
-const trim = (array) => {
-  for (let i = 0; i < array.length; i++) array[i] = array[i].trim()
 }
 
 const toDate = (strDate) => {
@@ -96,7 +91,7 @@ async function uploadFile(file) {
   const rows = fileToArray(file)
 
   //clear all the data before upload
-  await deleteData() //todo at the same end - comment this out
+  if (process.env.DELETE_DATA_ON_UPLOAD === 'true') await deleteData()
 
   for (const currentRow of rows) {
     //skip empty rows

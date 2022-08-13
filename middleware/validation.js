@@ -22,7 +22,7 @@ const validateToken = async (req, res, next) => {
   const token = req.headers.token
 
   await jwt.verify(token, process.env.KEY, async (err, decoded) => {
-    if (err) return res.status(403).send() //not authorised (bad jwt)
+    if (err) return res.status(403).send() //not authorized (bad jwt)
 
     const user = await prisma.user.findUnique({
       select: { id: true, username: true },

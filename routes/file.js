@@ -1,5 +1,5 @@
 const express = require('express')
-const { validateId, validateToken } = require('../middleware/validation')
+const { validateToken } = require('../middleware/validation')
 const uploadFile = require('../services/uploadFile')
 const router = express.Router()
 
