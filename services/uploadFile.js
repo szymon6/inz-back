@@ -16,17 +16,18 @@ const fileToArray = (file) => {
 const toDate = (strDate) => {
   if (!strDate || strDate == '') return null
 
+  let date
+
   if (/\d\d-\d\d-\d*/.test(strDate)) {
     //flip days and months due improper date format in the file
-    var dmy = strDate.split('-')
-    strDate = `${dmy[2]}-${dmy[1] - 1}-${dmy[0]}`
-    var date = new Date(strDate)
+    const dmy = strDate.split('-')
+    date = new Date(`${dmy[1]}-${dmy[0]}-${dmy[2]}`)
+  } else if (isNaN(strDate)) date = new Date(strDate)
 
-    date.setDate(date.getDate() + 1)
-    if (!isNaN(date)) return date
-  }
+  if (!isNaN(date)) date.setDate(date.getDate() + 1)
+  else date = new Date(0)
 
-  return new Date(0)
+  return date
 }
 
 const createEmployee = async (row) => {

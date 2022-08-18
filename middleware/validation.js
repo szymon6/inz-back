@@ -28,6 +28,7 @@ const validateToken = async (req, res, next) => {
       select: { id: true, username: true },
       where: { id: decoded.userId },
     })
+    if (!user) return res.status(403).send()
     req.headers.userId = user.id
     next()
   })

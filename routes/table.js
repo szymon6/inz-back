@@ -5,7 +5,6 @@ const {
   validateId,
   validateToken,
 } = require('../middleware/validation')
-const { RuleTester } = require('eslint')
 
 const router = express.Router()
 const prisma = new PrismaClient()
